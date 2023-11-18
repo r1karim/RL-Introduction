@@ -8,9 +8,12 @@ using Unity.MLAgents.Sensors;
 public class agent : Agent
 {
     [SerializeField] private Transform targetTransform;
+    [SerializeField] private Material winMaterial;
+    [SerializeField] private Material loseMaterial;
+    [SerializeField] private MeshRenderer floorMeshRenderer;
 
     public override void OnEpisodeBegin(){
-        transform.position = new Vector3(0, 1, 0);
+        transform.localPosition = new Vector3(0, 6, 0);
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -38,11 +41,14 @@ public class agent : Agent
         if(other.TryGetComponent<Goal>(out Goal goal))
         {
             SetReward(1f);
+            floorMeshRenderer.material = winMaterial;
             EndEpisode();
+        
         }
         if (other.TryGetComponent<Obstacle>(out Obstacle obstacle))
         {
             SetReward(-1f);
+            floorMeshRenderer.material = loseMaterial;
             EndEpisode();
         }
     }
